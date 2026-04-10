@@ -59,15 +59,24 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
 .add-remove-row{display:flex;gap:8px;margin-top:4px;}
 .hands-note{font-family:'Cinzel',serif;font-size:11px;color:var(--muted);letter-spacing:1.5px;text-align:center;margin-top:8px;font-style:italic;}
 .hand-mode-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;}
-.hand-mode-btn{background:linear-gradient(180deg,rgba(255,180,60,.04) 0%,transparent 100%),rgba(0,0,0,.3);border:1px solid rgba(201,150,42,.2);border-bottom:1px solid rgba(201,150,42,.35);border-radius:var(--rsm);color:var(--muted);font-family:'Cinzel',serif;font-size:22px;font-weight:700;padding:12px 6px 9px;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:3px;-webkit-appearance:none;}
+.hand-mode-btn{background:linear-gradient(180deg,rgba(255,180,60,.04) 0%,transparent 100%),rgba(0,0,0,.3);border:1px solid rgba(201,150,42,.2);border-bottom:1px solid rgba(201,150,42,.35);border-radius:var(--rsm);color:var(--muted);font-family:'Cinzel',serif;font-size:22px;font-weight:700;padding:10px 6px 9px;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:2px;-webkit-appearance:none;position:relative;}
 .hand-mode-btn span{font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
 .hand-mode-btn:active{transform:scale(.95);}
 .hand-mode-btn.selected{border-color:rgba(201,150,42,.55);background:linear-gradient(180deg,rgba(201,150,42,.12) 0%,rgba(201,150,42,.04) 100%),rgba(0,0,0,.3);color:var(--gold2);box-shadow:0 0 16px rgba(201,150,42,.15);}
 .hand-mode-btn.selected span{color:var(--gold);}
+.hand-mode-btn.recommended{border-color:rgba(46,204,113,.35);border-top:2px solid rgba(46,204,113,.6);}
+.hand-mode-btn.recommended.selected{border-color:rgba(46,204,113,.6);box-shadow:0 0 18px rgba(46,204,113,.2);}
+.hand-mode-num{font-size:26px;font-weight:700;line-height:1;}
+.rec-badge{
+  font-family:'Cinzel',serif;font-size:7px;font-weight:700;letter-spacing:1.5px;
+  color:var(--green3);text-transform:uppercase;
+  background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.3);
+  border-radius:20px;padding:2px 6px;white-space:nowrap;margin-bottom:1px;
+}
 .setup-step{display:none;width:100%;max-width:440px;flex-direction:column;gap:14px;}
 .setup-step.active{display:flex;}
 .step-nav{display:flex;gap:8px;margin-top:4px;}
-.step-dots{display:flex;gap:7px;justify-content:center;margin-bottom:4px;}
+.step-dots{display:flex;gap:7px;justify-content:center;margin-top:16px;margin-bottom:16px;}
 .step-dot{width:8px;height:8px;border-radius:50%;background:rgba(201,150,42,.15);border:1px solid rgba(201,150,42,.2);transition:all .25s;}
 .step-dot.active{background:var(--gold2);box-shadow:0 0 8px rgba(232,184,75,.6);border-color:var(--gold3);}
 .start-wrap{width:100%;max-width:440px;display:flex;flex-direction:column;gap:10px;}
@@ -189,17 +198,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
 }
 .g-table-felt{
   position:relative;width:100%;height:100%;
-  /* deep realistic felt */
-  background:
-    radial-gradient(ellipse 65% 55% at 50% 12%, rgba(22,100,55,.8) 0%,transparent 65%),
-    radial-gradient(ellipse 80% 50% at 50% 95%, rgba(4,20,10,.9) 0%,transparent 50%),
-    radial-gradient(ellipse 35% 40% at  8% 55%, rgba(255,110,10,.06) 0%,transparent 60%),
-    radial-gradient(ellipse 35% 40% at 92% 55%, rgba(255,110,10,.05) 0%,transparent 60%),
-    repeating-linear-gradient(0deg,  transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px),
-    repeating-linear-gradient(90deg, transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 4px),
-    #0b3d20;
   border-radius:50% 50% 46% 46% / 14% 14% 8% 8%;
-  overflow:visible; /* CRITICAL: don't clip hand panels */
+  overflow:visible;
+  /* Base felt color — deep casino green */
+  background-color:#0a3d1e;
   box-shadow:
     0 0 0 4px  #1e0c02,
     0 0 0 7px  #7a3e10,
@@ -211,24 +213,67 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
     0 -12px 50px rgba(201,150,42,.3),
     inset 0 2px 0 rgba(255,255,255,.04);
 }
+/* Layer 1: woven diagonal micro-fiber pattern */
+.g-table-felt::before {
+  content:'';
+  position:absolute;inset:0;border-radius:inherit;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,.018) 0px, rgba(255,255,255,.018) 1px,
+      transparent 1px, transparent 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0,0,0,.04) 0px, rgba(0,0,0,.04) 1px,
+      transparent 1px, transparent 4px
+    ),
+    /* subtle nap direction — horizontal brush strokes */
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.012) 0px, rgba(255,255,255,.012) 1px,
+      transparent 1px, transparent 3px
+    );
+  mix-blend-mode: overlay;
+  pointer-events:none;z-index:1;
+}
+/* Layer 2: lighting — fire glow from dealer above, darker edges */
+.g-table-felt::after {
+  content:'';
+  position:absolute;inset:0;border-radius:inherit;
+  background:
+    /* dealer fire warmth, top center */
+    radial-gradient(ellipse 60% 45% at 50% 8%,  rgba(30,115,60,.72) 0%,transparent 60%),
+    /* deep shadow at bottom edge */
+    radial-gradient(ellipse 90% 55% at 50% 105%, rgba(2,10,5,.95)   0%,transparent 55%),
+    /* left amber sconce warmth */
+    radial-gradient(ellipse 30% 40% at  6% 50%,  rgba(220,100,10,.07) 0%,transparent 65%),
+    /* right amber sconce warmth */
+    radial-gradient(ellipse 30% 40% at 94% 50%,  rgba(220,100,10,.06) 0%,transparent 65%),
+    /* center highlight — worn area of felt */
+    radial-gradient(ellipse 40% 30% at 50% 45%,  rgba(20,80,40,.35)  0%,transparent 70%),
+    /* overall vignette — edges darker */
+    radial-gradient(ellipse 95% 90% at 50% 50%,  transparent 45%, rgba(0,0,0,.45) 100%);
+  pointer-events:none;z-index:2;
+}
 
 /* felt text */
 .g-felt-title,.g-felt-sub,.g-felt-rule,.g-felt-arc,.g-felt-bot{display:none;}
 
 /* props */
-.g-prop      {position:absolute;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.g-prop      {position:absolute;display:flex;flex-direction:column;align-items:center;gap:3px;z-index:10;}
 .g-prop-lbl  {font-family:'Cinzel',serif;font-size:clamp(6px,.7vw,8px);font-weight:700;letter-spacing:1px;color:rgba(201,150,42,.55);text-align:center;line-height:1.3;}
 .g-prop-lbl small{font-size:.85em;color:rgba(201,150,42,.4);}
-.g-shoe      {top:3%;right:2%;}
+.g-shoe      {top:6%;left:calc(50% - 160px);transform:translateX(-100%);}
 .g-shoe-box  {width:clamp(38px,5.5vw,60px);height:clamp(52px,7.5vw,78px);background:linear-gradient(160deg,#1c1c1a,#080806);border-radius:4px;border:1px solid rgba(255,255,255,.1);box-shadow:3px 3px 12px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);display:flex;flex-direction:column;justify-content:flex-end;padding:3px;overflow:hidden;}
 .g-shoe-cards{width:100%;flex:1;background:repeating-linear-gradient(180deg,#8b1818,#8b1818 2px,#6a1212 2px,#6a1212 4px);border-radius:2px;}
-.g-discard   {top:3%;right:12%;}
+.g-discard   {top:6%;left:calc(50% + 160px);}
 .g-discard-box{width:clamp(34px,4.8vw,54px);height:clamp(30px,4.2vw,44px);background:linear-gradient(160deg,#2a0a05,#140403);border-radius:4px;border:1px solid rgba(180,55,15,.4);display:flex;align-items:center;justify-content:center;font-size:clamp(13px,2vw,22px);box-shadow:inset 0 2px 8px rgba(0,0,0,.6),0 0 8px rgba(180,55,15,.2);}
 
 /* dealer zone (center-upper felt) */
 .g-dealer-zone{
   position:absolute;top:4%;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:6px;z-index:5;
+  display:flex;flex-direction:column;align-items:center;gap:6px;z-index:10;
   background:rgba(4,22,12,.65);
   border:1px solid rgba(201,150,42,.35);
   border-radius:10px;
@@ -258,8 +303,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
 /* ── PLAYER ARC — fixed screen overlay, lower half ── */
 .g-player-arc{
   position:fixed;
-  top:52%;left:0;right:0;
-  bottom:52px;
+  top:50%;left:2%;right:2%;
+  bottom:80px; /* clear gap from bottom edge */
   z-index:15;
   pointer-events:none;
 }
@@ -386,10 +431,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
 /* ── DEALER CHARACTER ─────────────────────────────── */
 .g-dealer-char{
   position:absolute;
-  top:-2%;left:50%;transform:translateX(-50%);
-  width:clamp(190px,28vw,320px);
+  top:-4%;left:50%;transform:translateX(-50%);
+  width:clamp(210px,32vw,360px);
   z-index:5;
-  filter:drop-shadow(0 0 32px rgba(255,130,0,.8)) drop-shadow(0 0 60px rgba(255,80,0,.4));
+  filter:drop-shadow(0 0 36px rgba(255,130,0,.85)) drop-shadow(0 0 70px rgba(255,80,0,.4));
   animation:dealerFloat 5s ease-in-out infinite;
 }
 @keyframes dealerFloat{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-10px);}}
@@ -491,8 +536,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
   <!-- STEP 1: How many players -->
   <div class="setup-step active" id="step1">
     <div class="setup-panel">
-      <h3>👥 How Many Players?</h3>
-      <p style="font-size:11px;color:var(--muted);letter-spacing:1.5px;margin-bottom:10px;text-transform:uppercase">Everyone takes turns as dealer each round</p>
+      <h3 style="text-align:center">How Many Players?</h3>
+      <p style="font-size:11px;color:var(--muted);letter-spacing:1.5px;margin-bottom:10px;text-transform:uppercase;text-align:center">Everyone takes turns as dealer each round</p>
       <div class="hand-mode-grid" id="playerCountGrid" style="grid-template-columns: repeat(3,1fr)"></div>
     </div>
     <div class="step-nav">
@@ -503,7 +548,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
   <!-- STEP 2: Name players -->
   <div class="setup-step" id="step2">
     <div class="setup-panel">
-      <h3>✏️ Name Your Players</h3>
+      <h3 style="text-align:center">Name Your Players</h3>
       <div id="playerRows"></div>
     </div>
     <div class="step-nav">
@@ -515,13 +560,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
   <!-- STEP 3: Hands per round (difficulty) -->
   <div class="setup-step" id="step3">
     <div class="setup-panel">
-      <h3>🃏 Hands Per Round</h3>
+      <h3 id="handsStepTitle" style="text-align:center">Hands Per Round</h3>
       <div class="hand-mode-grid" id="handModeGrid"></div>
       <div class="hands-note" id="handModeNote"></div>
     </div>
     <div class="step-nav">
       <button class="btn btn-ghost btn-md" style="flex:1" onclick="goStep(2)">← Back</button>
-      <button class="btn btn-fire btn-lg" style="flex:2" onclick="startGame()">🔥 Start Game</button>
+      <button class="btn btn-fire btn-lg" style="flex:2" onclick="startGame()">START GAME</button>
     </div>
   </div>
 </div>
@@ -566,6 +611,27 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
   <!-- OVAL TABLE -->
   <div class="g-table-wrap">
     <div class="g-table-felt">
+      <!-- SVG noise filter for fabric grain — renders inline, zero HTTP cost -->
+      <svg width="0" height="0" style="position:absolute">
+        <defs>
+          <filter id="feltGrain" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65 0.75" numOctaves="4" seed="8" stitchTiles="stitch" result="noise"/>
+            <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+            <feBlend in="SourceGraphic" in2="grayNoise" mode="overlay" result="blended"/>
+            <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+          </filter>
+          <!-- Separate softer nap filter for the brush-stroke direction effect -->
+          <filter id="feltNap" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="turbulence" baseFrequency="0.02 0.8" numOctaves="2" seed="3" stitchTiles="stitch" result="nap"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0" in="nap" result="napAlpha"/>
+            <feBlend in="SourceGraphic" in2="napAlpha" mode="overlay"/>
+          </filter>
+        </defs>
+      </svg>
+      <!-- Grain overlay div — covers the felt with the SVG noise filter -->
+      <div style="position:absolute;inset:0;border-radius:inherit;z-index:3;pointer-events:none;filter:url(#feltGrain);opacity:.18;background:#1a6b38;mix-blend-mode:overlay;"></div>
+      <!-- Nap direction overlay — subtle horizontal sheen -->
+      <div style="position:absolute;inset:0;border-radius:inherit;z-index:3;pointer-events:none;filter:url(#feltNap);opacity:.22;background:#0a3d1e;mix-blend-mode:soft-light;"></div>
 
       <!-- felt inscriptions (subtle) -->
       <div class="g-felt-title">BLACKJACK</div>
@@ -609,188 +675,236 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Oswald
 
   <!-- DEALER CHARACTER — warm fire figure, large, above table -->
   <div class="g-dealer-char" id="tableDealerChar">
-    <svg viewBox="0 0 240 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;overflow:visible">
+    <svg viewBox="0 0 280 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;overflow:visible">
       <defs>
-        <!-- glow filters -->
-        <filter id="gSoft" x="-40%" y="-40%" width="180%" height="180%">
+        <!-- Soft glow for face/fire -->
+        <filter id="fGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="10" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- Hard outer aura -->
+        <filter id="fAura" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="22" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- Soft arm glow -->
+        <filter id="fArm" x="-30%" y="-30%" width="160%" height="160%">
           <feGaussianBlur stdDeviation="6" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <filter id="gHard" x="-80%" y="-80%" width="260%" height="260%">
-          <feGaussianBlur stdDeviation="16" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <filter id="gHands" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="5" result="b"/>
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
-
-        <!-- flame gradients — warm orange-yellow like the reference image -->
-        <radialGradient id="headGrad" cx="50%" cy="65%" r="58%">
-          <stop offset="0%"   stop-color="#fff5a0"/>
-          <stop offset="20%"  stop-color="#ffdd00"/>
-          <stop offset="50%"  stop-color="#ff8800"/>
-          <stop offset="80%"  stop-color="#ff4400"/>
-          <stop offset="100%" stop-color="#cc1a00" stop-opacity=".6"/>
+        <!-- Face gradient: bright center, orange rim -->
+        <radialGradient id="faceFill" cx="50%" cy="58%" r="50%">
+          <stop offset="0%"   stop-color="#fff9d0"/>
+          <stop offset="18%"  stop-color="#ffe060"/>
+          <stop offset="42%"  stop-color="#ff9900"/>
+          <stop offset="70%"  stop-color="#ff5500"/>
+          <stop offset="100%" stop-color="#cc2200" stop-opacity=".55"/>
         </radialGradient>
-        <radialGradient id="auraGrad" cx="50%" cy="55%" r="52%">
-          <stop offset="0%"   stop-color="#ffbb00" stop-opacity=".9"/>
-          <stop offset="60%"  stop-color="#ff5500" stop-opacity=".55"/>
+        <!-- Outer fire aura -->
+        <radialGradient id="auraFill" cx="50%" cy="60%" r="50%">
+          <stop offset="0%"   stop-color="#ffbb00" stop-opacity=".85"/>
+          <stop offset="55%"  stop-color="#ff5500" stop-opacity=".45"/>
           <stop offset="100%" stop-color="#ff1100" stop-opacity="0"/>
         </radialGradient>
-        <radialGradient id="armFireGrad" cx="50%" cy="40%" r="60%">
-          <stop offset="0%"   stop-color="#ffcc00" stop-opacity=".9"/>
-          <stop offset="100%" stop-color="#ff4400" stop-opacity=".15"/>
+        <!-- Shirt -->
+        <linearGradient id="shirtFill" x1="0%" y1="0%" x2="8%" y2="100%">
+          <stop offset="0%"   stop-color="#f2e4cc"/>
+          <stop offset="100%" stop-color="#c8a87a"/>
+        </linearGradient>
+        <!-- Vest -->
+        <linearGradient id="vestFill" x1="0%" y1="0%" x2="4%" y2="100%">
+          <stop offset="0%"   stop-color="#2c1e0e"/>
+          <stop offset="50%"  stop-color="#1c1208"/>
+          <stop offset="100%" stop-color="#0e0804"/>
+        </linearGradient>
+        <!-- Vest surface sheen -->
+        <linearGradient id="vestSheen" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stop-color="rgba(255,200,100,.14)"/>
+          <stop offset="100%" stop-color="rgba(255,200,100,0)"/>
+        </linearGradient>
+        <!-- Arm fire gradient -->
+        <linearGradient id="armFire" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#ffcc00" stop-opacity=".92"/>
+          <stop offset="60%"  stop-color="#ff6600" stop-opacity=".65"/>
+          <stop offset="100%" stop-color="#ff2200" stop-opacity=".2"/>
+        </linearGradient>
+        <!-- Skin for hands -->
+        <radialGradient id="skinFill" cx="50%" cy="40%" r="55%">
+          <stop offset="0%"   stop-color="#d4956a"/>
+          <stop offset="100%" stop-color="#b07040"/>
         </radialGradient>
-
-        <!-- body gradients — realistic dark vest over white shirt -->
-        <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="10%" y2="100%">
-          <stop offset="0%"   stop-color="#f0e0c0"/>
-          <stop offset="100%" stop-color="#c8a878"/>
-        </linearGradient>
-        <linearGradient id="vestGrad" x1="0%" y1="0%" x2="5%" y2="100%">
-          <stop offset="0%"   stop-color="#2a1e0e"/>
-          <stop offset="40%"  stop-color="#1e1408"/>
-          <stop offset="100%" stop-color="#100a02"/>
-        </linearGradient>
-        <linearGradient id="vestShine" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"   stop-color="rgba(255,220,140,.12)"/>
-          <stop offset="100%" stop-color="rgba(255,220,140,0)"/>
-        </linearGradient>
-
-        <!-- table glow under hands -->
-        <radialGradient id="tableGlowGrad" cx="50%" cy="100%" r="55%">
-          <stop offset="0%"   stop-color="#ff9900" stop-opacity=".45"/>
+        <!-- Table glow below character -->
+        <radialGradient id="tableGlow" cx="50%" cy="100%" r="50%">
+          <stop offset="0%"   stop-color="#ff8800" stop-opacity=".5"/>
           <stop offset="100%" stop-color="#ff3300" stop-opacity="0"/>
         </radialGradient>
       </defs>
 
-      <!-- ── TABLE GLOW UNDER CHARACTER ── -->
-      <ellipse cx="120" cy="312" rx="105" ry="26" fill="url(#tableGlowGrad)"/>
+      <!-- ── TABLE GLOW ── -->
+      <ellipse cx="140" cy="370" rx="120" ry="28" fill="url(#tableGlow)"/>
 
-      <!-- ── BODY: WHITE SHIRT ── -->
-      <rect x="62" y="178" width="116" height="120" rx="18" fill="url(#shirtGrad)"/>
+      <!-- ══════════════════════════════════
+           BODY
+      ══════════════════════════════════ -->
 
-      <!-- ── VEST (dark overlay) ── -->
-      <path d="M70 178 L120 195 L170 178 L176 295 L64 295 Z" fill="url(#vestGrad)"/>
-      <!-- vest shine -->
-      <path d="M70 178 L120 195 L170 178 L176 295 L64 295 Z" fill="url(#vestShine)"/>
-      <!-- vest left lapel -->
-      <path d="M95 178 L120 215 L88 178 Z" fill="#f0e0c0"/>
-      <!-- vest right lapel -->
-      <path d="M145 178 L120 215 L152 178 Z" fill="#f0e0c0"/>
-      <!-- vest shadow seams -->
-      <line x1="120" y1="195" x2="120" y2="295" stroke="rgba(0,0,0,.2)" stroke-width="1"/>
+      <!-- White shirt (visible at collar V and sleeves) -->
+      <rect x="72" y="210" width="136" height="148" rx="20" fill="url(#shirtFill)"/>
 
-      <!-- ── BOW TIE ── -->
-      <path d="M104 196 L120 207 L136 196 L120 203 Z" fill="#0d0a06"/>
-      <ellipse cx="120" cy="199" rx="5" ry="4" fill="#1a1208"/>
-      <!-- tie highlight -->
-      <ellipse cx="118" cy="198" rx="2" ry="1.5" fill="rgba(255,200,100,.15)" transform="rotate(-20,118,198)"/>
+      <!-- Vest body -->
+      <path d="M80 210 L140 228 L200 210 L208 355 L72 355 Z" fill="url(#vestFill)"/>
+      <path d="M80 210 L140 228 L200 210 L208 355 L72 355 Z" fill="url(#vestSheen)"/>
 
-      <!-- ── ARMS (dark vest sleeves, wide, resting on table) ── -->
-      <!-- left arm -->
-      <path d="M16 238 Q12 252 20 265 Q30 272 55 272 Q80 272 92 268 L92 248 Q78 242 55 240 Q35 238 16 238 Z" fill="url(#vestGrad)"/>
-      <!-- right arm -->
-      <path d="M224 238 Q228 252 220 265 Q210 272 185 272 Q160 272 148 268 L148 248 Q162 242 185 240 Q205 238 224 238 Z" fill="url(#vestGrad)"/>
+      <!-- Shirt lapels (white V shape at chest) -->
+      <path d="M108 210 L140 252 L108 210 Z" fill="#f2e4cc"/>
+      <path d="M172 210 L140 252 L172 210 Z" fill="#f2e4cc"/>
+      <!-- Lapel shadow -->
+      <path d="M112 210 L140 248 L114 210 Z" fill="rgba(0,0,0,.12)"/>
+      <path d="M168 210 L140 248 L166 210 Z" fill="rgba(0,0,0,.12)"/>
 
-      <!-- ── ARM FIRE (left forearm) ── -->
-      <ellipse cx="54" cy="248" rx="22" ry="12" fill="#ff8800" opacity=".45" filter="url(#gSoft)"/>
-      <path d="M30 250 Q23 232 33 218 Q28 234 38 226 Q32 242 44 238 Q34 252 30 250Z" fill="url(#armFireGrad)" opacity=".85">
-        <animateTransform attributeName="transform" type="scale" values="1,1;1.08,1.15;.97,1.04;1,1" dur="1.9s" repeatCount="indefinite" additive="sum"/>
+      <!-- Vest center seam -->
+      <line x1="140" y1="228" x2="140" y2="355" stroke="rgba(0,0,0,.18)" stroke-width="1.2"/>
+
+      <!-- Bow tie — two triangles meeting at center -->
+      <path d="M122 232 L140 243 L122 254 Z" fill="#080604"/>
+      <path d="M158 232 L140 243 L158 254 Z" fill="#080604"/>
+      <ellipse cx="140" cy="243" rx="5.5" ry="5" fill="#120e08"/>
+      <!-- Bow tie highlight -->
+      <ellipse cx="138" cy="241" rx="2.5" ry="1.8" fill="rgba(255,200,80,.18)" transform="rotate(-15,138,241)"/>
+
+      <!-- Vest buttons (3 small) -->
+      <ellipse cx="140" cy="272" rx="3.5" ry="3" fill="#0a0806"/>
+      <ellipse cx="140" cy="292" rx="3.5" ry="3" fill="#0a0806"/>
+      <ellipse cx="140" cy="312" rx="3.5" ry="3" fill="#0a0806"/>
+
+      <!-- ══════════════════════════════════
+           ARMS (sleeves + fire)
+      ══════════════════════════════════ -->
+
+      <!-- Left sleeve -->
+      <path d="M20 296 Q16 316 24 332 Q34 344 68 344 Q98 344 110 338 L110 314 Q94 306 68 302 Q44 298 20 296 Z" fill="url(#vestFill)"/>
+      <!-- Right sleeve -->
+      <path d="M260 296 Q264 316 256 332 Q246 344 212 344 Q182 344 170 338 L170 314 Q186 306 212 302 Q236 298 260 296 Z" fill="url(#vestFill)"/>
+
+      <!-- Left arm fire — multiple tendrils -->
+      <ellipse cx="64" cy="316" rx="28" ry="14" fill="#ff8800" opacity=".35" filter="url(#fArm)"/>
+      <path d="M36 318 Q28 298 38 282 Q32 300 44 292 Q36 310 50 306 Q38 320 36 318 Z" fill="url(#armFire)" opacity=".9">
+        <animateTransform attributeName="transform" type="scale" values="1,1;1.09,1.15;.97,1.04;1,1" dur="1.9s" repeatCount="indefinite" additive="sum"/>
       </path>
-      <path d="M56 246 Q50 226 60 212 Q54 228 66 220 Q58 236 70 232 Q60 248 56 246Z" fill="url(#armFireGrad)" opacity=".72">
-        <animateTransform attributeName="transform" type="scale" values="1,1;1.05,1.10;1,1" dur="2.3s" repeatCount="indefinite" additive="sum"/>
+      <path d="M58 314 Q50 292 60 276 Q54 294 66 286 Q58 304 72 298 Q60 316 58 314 Z" fill="url(#armFire)" opacity=".78">
+        <animateTransform attributeName="transform" type="scale" values="1,1;1.06,1.11;1,1" dur="2.3s" repeatCount="indefinite" additive="sum"/>
+      </path>
+      <path d="M80 310 Q76 290 84 278 Q80 294 90 286 Q84 302 94 298 Q84 312 80 310 Z" fill="url(#armFire)" opacity=".65">
+        <animateTransform attributeName="transform" type="scale" values="1,1;1.05,1.09;1,1" dur="1.7s" repeatCount="indefinite" additive="sum"/>
       </path>
 
-      <!-- ── ARM FIRE (right forearm) ── -->
-      <ellipse cx="186" cy="248" rx="22" ry="12" fill="#ff8800" opacity=".45" filter="url(#gSoft)"/>
-      <path d="M210 250 Q217 232 207 218 Q212 234 202 226 Q208 242 196 238 Q206 252 210 250Z" fill="url(#armFireGrad)" opacity=".85">
-        <animateTransform attributeName="transform" type="scale" values="1,1;1.08,1.15;.97,1.04;1,1" dur="1.7s" repeatCount="indefinite" additive="sum"/>
+      <!-- Right arm fire -->
+      <ellipse cx="216" cy="316" rx="28" ry="14" fill="#ff8800" opacity=".35" filter="url(#fArm)"/>
+      <path d="M244 318 Q252 298 242 282 Q248 300 236 292 Q244 310 230 306 Q242 320 244 318 Z" fill="url(#armFire)" opacity=".9">
+        <animateTransform attributeName="transform" type="scale" values="1,1;1.09,1.15;.97,1.04;1,1" dur="1.7s" repeatCount="indefinite" additive="sum"/>
       </path>
-      <path d="M184 246 Q190 226 180 212 Q186 228 174 220 Q182 236 170 232 Q180 248 184 246Z" fill="url(#armFireGrad)" opacity=".72">
-        <animateTransform attributeName="transform" type="scale" values="1,1;1.05,1.10;1,1" dur="2.5s" repeatCount="indefinite" additive="sum"/>
+      <path d="M222 314 Q230 292 220 276 Q226 294 214 286 Q222 304 208 298 Q220 316 222 314 Z" fill="url(#armFire)" opacity=".78">
+        <animateTransform attributeName="transform" type="scale" values="1,1;1.06,1.11;1,1" dur="2.5s" repeatCount="indefinite" additive="sum"/>
+      </path>
+      <path d="M200 310 Q204 290 196 278 Q200 294 190 286 Q196 302 186 298 Q196 312 200 310 Z" fill="url(#armFire)" opacity=".65">
+        <animateTransform attributeName="transform" type="scale" values="1,1;1.05,1.09;1,1" dur="2.1s" repeatCount="indefinite" additive="sum"/>
       </path>
 
-      <!-- ── HANDS CLASPED (realistic interlocked fingers) ── -->
-      <!-- left hand blob -->
-      <path d="M82 268 Q78 278 86 284 Q94 290 104 288 Q112 286 116 280 Q118 274 114 270 Q108 266 96 266 Q88 266 82 268Z" fill="#c8956a"/>
-      <!-- right hand blob -->
-      <path d="M158 268 Q162 278 154 284 Q146 290 136 288 Q128 286 124 280 Q122 274 126 270 Q132 266 144 266 Q152 266 158 268Z" fill="#c8956a"/>
-      <!-- finger details left -->
-      <path d="M88 266 Q86 258 90 254 Q94 250 98 254 Q100 258 98 266" fill="#b8855a" opacity=".8"/>
-      <path d="M100 264 Q98 256 102 252 Q106 248 110 252 Q112 256 110 264" fill="#b8855a" opacity=".7"/>
-      <!-- finger details right -->
-      <path d="M152 266 Q154 258 150 254 Q146 250 142 254 Q140 258 142 266" fill="#b8855a" opacity=".8"/>
-      <path d="M140 264 Q142 256 138 252 Q134 248 130 252 Q128 256 130 264" fill="#b8855a" opacity=".7"/>
-      <!-- knuckle highlights -->
-      <ellipse cx="95" cy="256" rx="4" ry="2" fill="rgba(255,220,160,.25)" transform="rotate(-10,95,256)"/>
-      <ellipse cx="143" cy="256" rx="4" ry="2" fill="rgba(255,220,160,.25)" transform="rotate(10,143,256)"/>
-      <!-- orange fire glow on hands -->
-      <ellipse cx="120" cy="272" rx="42" ry="14" fill="#ff7700" opacity=".22" filter="url(#gHands)"/>
+      <!-- ══════════════════════════════════
+           CLASPED HANDS on table edge
+      ══════════════════════════════════ -->
+      <!-- Left hand -->
+      <path d="M92 344 Q86 356 94 366 Q104 374 118 372 Q128 370 132 362 Q134 354 128 348 Q120 342 104 342 Q96 342 92 344 Z" fill="url(#skinFill)"/>
+      <!-- Right hand -->
+      <path d="M188 344 Q194 356 186 366 Q176 374 162 372 Q152 370 148 362 Q146 354 152 348 Q160 342 176 342 Q184 342 188 344 Z" fill="url(#skinFill)"/>
+      <!-- Finger lines left -->
+      <path d="M100 342 Q98 332 102 326 Q106 320 110 326 Q112 332 110 342" fill="rgba(100,60,20,.6)" opacity=".7"/>
+      <path d="M114 340 Q112 330 116 324 Q120 318 124 324 Q126 330 124 340" fill="rgba(100,60,20,.6)" opacity=".6"/>
+      <!-- Finger lines right -->
+      <path d="M170 342 Q172 332 168 326 Q164 320 160 326 Q158 332 160 342" fill="rgba(100,60,20,.6)" opacity=".7"/>
+      <path d="M156 340 Q158 330 154 324 Q150 318 146 324 Q144 330 146 340" fill="rgba(100,60,20,.6)" opacity=".6"/>
+      <!-- Knuckle highlights -->
+      <ellipse cx="107" cy="328" rx="5" ry="2.5" fill="rgba(255,220,160,.22)" transform="rotate(-12,107,328)"/>
+      <ellipse cx="163" cy="328" rx="5" ry="2.5" fill="rgba(255,220,160,.22)" transform="rotate(12,163,328)"/>
+      <!-- Orange glow on hands -->
+      <ellipse cx="140" cy="354" rx="52" ry="16" fill="#ff7700" opacity=".2" filter="url(#fArm)"/>
 
-      <!-- ── OUTER FLAME AURA ── -->
-      <ellipse cx="120" cy="105" rx="76" ry="70" fill="url(#auraGrad)" filter="url(#gHard)" opacity=".7">
-        <animate attributeName="rx" values="76;85;68;78;76" dur="3s" repeatCount="indefinite"/>
-        <animate attributeName="ry" values="70;78;62;72;70" dur="2.7s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values=".7;.9;.55;.78;.7" dur="2.5s" repeatCount="indefinite"/>
+      <!-- ══════════════════════════════════
+           HEAD — round sphere of fire
+      ══════════════════════════════════ -->
+
+      <!-- Outer aura blob — large, soft, pulses -->
+      <ellipse cx="140" cy="130" rx="88" ry="82" fill="url(#auraFill)" filter="url(#fAura)" opacity=".72">
+        <animate attributeName="rx" values="88;98;80;92;88" dur="3.2s" repeatCount="indefinite"/>
+        <animate attributeName="ry" values="82;92;74;86;82" dur="2.9s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values=".72;.92;.55;.82;.72" dur="2.6s" repeatCount="indefinite"/>
       </ellipse>
 
-      <!-- ── FLAME TIPS ── -->
-      <!-- far left tip -->
-      <path d="M72 98 Q62 56 76 28 Q70 58 86 44 Q74 72 90 66 Q78 92 72 98Z" fill="#ff8800" opacity=".78" filter="url(#gSoft)">
-        <animate attributeName="d" values="M72 98 Q62 56 76 28 Q70 58 86 44 Q74 72 90 66 Q78 92 72 98Z;M70 100 Q58 52 74 22 Q68 56 84 40 Q72 70 88 62 Q76 90 70 100Z;M72 98 Q62 56 76 28 Q70 58 86 44 Q74 72 90 66 Q78 92 72 98Z" dur="1.8s" repeatCount="indefinite"/>
+      <!-- Flame tongues erupting upward — all animated -->
+      <!-- Far left -->
+      <path d="M84 118 Q74 80 86 50 Q80 76 94 62 Q84 88 98 82 Q86 108 84 118 Z" fill="#ff8800" opacity=".82" filter="url(#fGlow)">
+        <animate attributeName="d" values="M84 118 Q74 80 86 50 Q80 76 94 62 Q84 88 98 82 Q86 108 84 118 Z;M82 120 Q70 76 84 44 Q78 72 92 56 Q82 84 96 76 Q84 106 82 120 Z;M84 118 Q74 80 86 50 Q80 76 94 62 Q84 88 98 82 Q86 108 84 118 Z" dur="1.8s" repeatCount="indefinite"/>
       </path>
-      <!-- far right tip -->
-      <path d="M168 98 Q178 56 164 28 Q170 58 154 44 Q166 72 150 66 Q162 92 168 98Z" fill="#ff8800" opacity=".78" filter="url(#gSoft)">
-        <animate attributeName="d" values="M168 98 Q178 56 164 28 Q170 58 154 44 Q166 72 150 66 Q162 92 168 98Z;M170 100 Q182 52 166 22 Q172 56 156 40 Q168 70 152 62 Q164 90 170 100Z;M168 98 Q178 56 164 28 Q170 58 154 44 Q166 72 150 66 Q162 92 168 98Z" dur="2.2s" repeatCount="indefinite"/>
+      <!-- Left-center -->
+      <path d="M106 108 Q98 68 110 40 Q104 66 118 52 Q108 76 120 70 Q110 100 106 108 Z" fill="#ffaa00" opacity=".88" filter="url(#fGlow)">
+        <animate attributeName="d" values="M106 108 Q98 68 110 40 Q104 66 118 52 Q108 76 120 70 Q110 100 106 108 Z;M104 110 Q96 64 108 36 Q102 62 116 48 Q106 72 118 66 Q108 98 104 110 Z;M106 108 Q98 68 110 40 Q104 66 118 52 Q108 76 120 70 Q110 100 106 108 Z" dur="1.5s" repeatCount="indefinite"/>
       </path>
-      <!-- inner left tip -->
-      <path d="M94 88 Q88 50 98 28 Q92 52 104 40 Q96 64 108 58 Q100 84 94 88Z" fill="#ffaa00" opacity=".85" filter="url(#gSoft)">
-        <animate attributeName="d" values="M94 88 Q88 50 98 28 Q92 52 104 40 Q96 64 108 58 Q100 84 94 88Z;M92 90 Q86 46 96 24 Q90 50 102 36 Q94 62 106 54 Q98 82 92 90Z;M94 88 Q88 50 98 28 Q92 52 104 40 Q96 64 108 58 Q100 84 94 88Z" dur="1.5s" repeatCount="indefinite"/>
+      <!-- Center tall crown -->
+      <path d="M140 96 Q132 50 142 18 Q136 46 150 30 Q142 58 152 50 Q144 78 140 96 Z" fill="#ffee44" opacity=".96" filter="url(#fGlow)">
+        <animate attributeName="d" values="M140 96 Q132 50 142 18 Q136 46 150 30 Q142 58 152 50 Q144 78 140 96 Z;M140 94 Q131 46 143 14 Q135 44 151 26 Q141 56 153 46 Q143 76 140 94 Z;M140 96 Q132 50 142 18 Q136 46 150 30 Q142 58 152 50 Q144 78 140 96 Z" dur="1.4s" repeatCount="indefinite"/>
       </path>
-      <!-- inner right tip -->
-      <path d="M146 88 Q152 50 142 28 Q148 52 136 40 Q144 64 132 58 Q140 84 146 88Z" fill="#ffaa00" opacity=".85" filter="url(#gSoft)">
-        <animate attributeName="d" values="M146 88 Q152 50 142 28 Q148 52 136 40 Q144 64 132 58 Q140 84 146 88Z;M148 90 Q154 46 144 24 Q150 50 138 36 Q146 62 134 54 Q142 82 148 90Z;M146 88 Q152 50 142 28 Q148 52 136 40 Q144 64 132 58 Q140 84 146 88Z" dur="1.9s" repeatCount="indefinite"/>
+      <!-- Right-center -->
+      <path d="M174 108 Q182 68 170 40 Q176 66 162 52 Q172 76 160 70 Q170 100 174 108 Z" fill="#ffaa00" opacity=".88" filter="url(#fGlow)">
+        <animate attributeName="d" values="M174 108 Q182 68 170 40 Q176 66 162 52 Q172 76 160 70 Q170 100 174 108 Z;M176 110 Q184 64 172 36 Q178 62 164 48 Q174 72 162 66 Q172 98 176 110 Z;M174 108 Q182 68 170 40 Q176 66 162 52 Q172 76 160 70 Q170 100 174 108 Z" dur="1.9s" repeatCount="indefinite"/>
       </path>
-      <!-- center crown tip -->
-      <path d="M120 78 Q112 36 122 10 Q116 38 128 24 Q120 50 130 44 Q122 68 120 78Z" fill="#ffee44" opacity=".95" filter="url(#gSoft)">
-        <animate attributeName="d" values="M120 78 Q112 36 122 10 Q116 38 128 24 Q120 50 130 44 Q122 68 120 78Z;M120 76 Q111 32 123 6 Q115 36 129 20 Q119 48 131 41 Q121 66 120 76Z;M120 78 Q112 36 122 10 Q116 38 128 24 Q120 50 130 44 Q122 68 120 78Z" dur="1.4s" repeatCount="indefinite"/>
-      </path>
-
-      <!-- ── FLAME HEAD ── -->
-      <path d="M62 130 Q54 92 66 62 Q72 80 80 70 Q76 96 88 84 Q84 106 96 94 Q92 112 106 100 Q102 72 120 52 Q116 74 128 64 Q124 90 136 78 Q132 100 146 90 Q142 106 156 96 Q152 80 162 70 Q168 88 164 120 Q170 102 176 118 Q178 138 164 156 Q150 174 120 177 Q90 174 76 156 Q62 138 62 130 Z" fill="url(#headGrad)" filter="url(#gSoft)">
-        <animate attributeName="d" values="M62 130 Q54 92 66 62 Q72 80 80 70 Q76 96 88 84 Q84 106 96 94 Q92 112 106 100 Q102 72 120 52 Q116 74 128 64 Q124 90 136 78 Q132 100 146 90 Q142 106 156 96 Q152 80 162 70 Q168 88 164 120 Q170 102 176 118 Q178 138 164 156 Q150 174 120 177 Q90 174 76 156 Q62 138 62 130 Z;M64 132 Q56 94 68 64 Q74 82 82 72 Q78 98 90 86 Q86 108 98 96 Q94 114 108 102 Q104 74 122 54 Q118 76 130 66 Q126 92 138 80 Q134 102 148 92 Q144 108 158 98 Q154 82 164 72 Q170 90 166 122 Q172 104 178 120 Q180 140 166 158 Q152 176 120 179 Q88 176 74 158 Q60 140 64 132 Z;M62 130 Q54 92 66 62 Q72 80 80 70 Q76 96 88 84 Q84 106 96 94 Q92 112 106 100 Q102 72 120 52 Q116 74 128 64 Q124 90 136 78 Q132 100 146 90 Q142 106 156 96 Q152 80 162 70 Q168 88 164 120 Q170 102 176 118 Q178 138 164 156 Q150 174 120 177 Q90 174 76 156 Q62 138 62 130 Z" dur="2.2s" repeatCount="indefinite"/>
+      <!-- Far right -->
+      <path d="M196 118 Q206 80 194 50 Q200 76 186 62 Q196 88 182 82 Q194 108 196 118 Z" fill="#ff8800" opacity=".82" filter="url(#fGlow)">
+        <animate attributeName="d" values="M196 118 Q206 80 194 50 Q200 76 186 62 Q196 88 182 82 Q194 108 196 118 Z;M198 120 Q210 76 196 44 Q202 72 188 56 Q198 84 184 76 Q196 106 198 120 Z;M196 118 Q206 80 194 50 Q200 76 186 62 Q196 88 182 82 Q194 108 196 118 Z" dur="2.2s" repeatCount="indefinite"/>
       </path>
 
-      <!-- ── EYES — large, round, warm white glow ── -->
-      <!-- eye sockets (warm shadow) -->
-      <ellipse cx="96" cy="128" rx="16" ry="17" fill="rgba(180,80,0,.3)"/>
-      <ellipse cx="144" cy="128" rx="16" ry="17" fill="rgba(180,80,0,.3)"/>
-      <!-- eyes outer glow -->
-      <ellipse cx="96" cy="128" rx="14" ry="15" fill="rgba(255,240,200,.95)" filter="url(#gSoft)">
-        <animate attributeName="ry" values="15;15;15;3;15;15" dur="4.5s" repeatCount="indefinite"/>
+      <!-- Round flame head — smooth sphere shape -->
+      <ellipse cx="140" cy="158" rx="66" ry="68" fill="url(#faceFill)" filter="url(#fGlow)">
+        <animate attributeName="rx" values="66;70;63;67;66" dur="2.4s" repeatCount="indefinite"/>
+        <animate attributeName="ry" values="68;72;65;69;68" dur="2.1s" repeatCount="indefinite"/>
       </ellipse>
-      <ellipse cx="144" cy="128" rx="14" ry="15" fill="rgba(255,240,200,.95)" filter="url(#gSoft)">
-        <animate attributeName="ry" values="15;15;15;3;15;15" dur="4.5s" begin=".15s" repeatCount="indefinite"/>
-      </ellipse>
-      <!-- eye inner bright -->
-      <ellipse id="eyeLD" cx="96" cy="128" rx="9" ry="10" fill="#fffce0">
-        <animate attributeName="ry" values="10;10;10;2;10;10" dur="4.5s" repeatCount="indefinite"/>
-      </ellipse>
-      <ellipse id="eyeRD" cx="144" cy="128" rx="9" ry="10" fill="#fffce0">
-        <animate attributeName="ry" values="10;10;10;2;10;10" dur="4.5s" begin=".15s" repeatCount="indefinite"/>
-      </ellipse>
-      <!-- eye shine spots -->
-      <ellipse cx="100" cy="122" rx="3" ry="2.5" fill="white" opacity=".7" transform="rotate(-15,100,122)"/>
-      <ellipse cx="148" cy="122" rx="3" ry="2.5" fill="white" opacity=".7" transform="rotate(-15,148,122)"/>
 
-      <!-- ── SMILE — warm, wide, friendly ── -->
-      <path id="dealerSmile" d="M90 150 Q120 168 150 150" stroke="rgba(255,220,80,.9)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+      <!-- Neck connection to body -->
+      <path d="M116 212 Q124 224 140 226 Q156 224 164 212 Q156 208 140 207 Q124 208 116 212 Z" fill="url(#faceFill)" opacity=".7"/>
 
-      <!-- head specular highlight -->
-      <ellipse cx="104" cy="100" rx="24" ry="16" fill="rgba(255,255,200,.14)" transform="rotate(-22,104,100)"/>
+      <!-- ══════════════════════════════════
+           FACE — eyes + smile
+      ══════════════════════════════════ -->
+
+      <!-- Eye sockets (warm deep shadow) -->
+      <ellipse cx="116" cy="156" rx="18" ry="19" fill="rgba(160,60,0,.35)"/>
+      <ellipse cx="164" cy="156" rx="18" ry="19" fill="rgba(160,60,0,.35)"/>
+
+      <!-- Eyes outer glow -->
+      <ellipse cx="116" cy="156" rx="15" ry="16" fill="rgba(255,245,200,.92)" filter="url(#fGlow)">
+        <animate attributeName="ry" values="16;16;16;3;16;16" dur="4.8s" repeatCount="indefinite"/>
+        <animate attributeName="rx" values="15;15;15;6;15;15" dur="4.8s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="164" cy="156" rx="15" ry="16" fill="rgba(255,245,200,.92)" filter="url(#fGlow)">
+        <animate attributeName="ry" values="16;16;16;3;16;16" dur="4.8s" begin=".18s" repeatCount="indefinite"/>
+        <animate attributeName="rx" values="15;15;15;6;15;15" dur="4.8s" begin=".18s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- Eye inner bright core -->
+      <ellipse id="eyeLD" cx="116" cy="156" rx="9" ry="10" fill="#fffff0">
+        <animate attributeName="ry" values="10;10;10;2;10;10" dur="4.8s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse id="eyeRD" cx="164" cy="156" rx="9" ry="10" fill="#fffff0">
+        <animate attributeName="ry" values="10;10;10;2;10;10" dur="4.8s" begin=".18s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- Catch-light specular -->
+      <ellipse cx="120" cy="150" rx="3.5" ry="2.5" fill="white" opacity=".75" transform="rotate(-15,120,150)"/>
+      <ellipse cx="168" cy="150" rx="3.5" ry="2.5" fill="white" opacity=".75" transform="rotate(-15,168,150)"/>
+
+      <!-- Smile — wide, warm, friendly arc -->
+      <path id="dealerSmile" d="M112 182 Q140 202 168 182" stroke="rgba(255,220,60,.92)" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+      <!-- Head highlight (specular sheen, top-left) -->
+      <ellipse cx="122" cy="130" rx="28" ry="18" fill="rgba(255,255,200,.13)" transform="rotate(-20,122,130)"/>
     </svg>
+  </div>
   </div>
 
   <!-- ACTION BAR -->
@@ -926,9 +1040,10 @@ function renderPlayerCountGrid() {
     btn.style.fontFamily = "'Cinzel', serif";
     btn.style.letterSpacing = '1px';
     btn.style.padding = '16px 6px';
+    // 7 sits alone on the last row — center it under the 5
+    if (n === 7) btn.style.gridColumn = '2';
     btn.onclick = () => {
       selectedPlayerCount = n;
-      // ALL n players are named — they all rotate as dealer each round
       while (setupPlayers.length < n) setupPlayers.push(`Player ${setupPlayers.length + 1}`);
       while (setupPlayers.length > n) setupPlayers.pop();
       renderPlayerCountGrid();
@@ -965,32 +1080,48 @@ function renderDeckCountGrid() {
   if (note) note.textContent = notes[selectedDeckCount];
 }
 
+function getRecommendedHands(playerCount) {
+  // Recommended: players - 1 (dealer sits out), clamped to 3-6
+  const rec = playerCount - 1;
+  return Math.max(3, Math.min(6, rec));
+}
+
 function renderHandModeGrid() {
   const grid = document.getElementById('handModeGrid');
   if (!grid) return;
   grid.innerHTML = '';
   const options = [3, 4, 5, 6];
-  const labels = { 3: 'NIGHTMARE', 4: 'HARD', 5: 'MEDIUM', 6: 'EASY' };
-  const descriptions = {
-    3: '💀 NIGHTMARE — barely any room to survive',
-    4: '🔥 HARD — one mistake can end it all',
-    5: '⚡ MEDIUM — challenging but beatable',
-    6: '😎 EASY — the full deck is on your side'
-  };
+  
+  const rec = getRecommendedHands(selectedPlayerCount);
+
+  // Auto-select recommended if nothing chosen yet or out of range
+  if (!selectedHandCount || ![3,4,5,6].includes(selectedHandCount)) {
+    selectedHandCount = rec;
+  }
+
   options.forEach(n => {
+    const isRec = n === rec;
     const btn = document.createElement('button');
-    btn.className = 'hand-mode-btn' + (n === selectedHandCount ? ' selected' : '');
-    btn.innerHTML = `${n}<span>${labels[n]}</span>`;
+    btn.className = 'hand-mode-btn' + (n === selectedHandCount ? ' selected' : '') + (isRec ? ' recommended' : '');
+    btn.innerHTML = `
+      ${isRec ? '<div class="rec-badge">★ RECOMMENDED</div>' : ''}
+      <div class="hand-mode-num">${n}</div>
+      <span>HANDS</span>
+    `;
     btn.onclick = () => {
       selectedHandCount = n;
-      // No clamping needed — with a rotating dealer, selectedPlayerCount can exceed
-      // hand count (e.g. 5 players, 4 hands: 1 deals, 4 play). Always valid.
       renderHandModeGrid();
     };
     grid.appendChild(btn);
   });
+
+  const title = document.getElementById('handsStepTitle');
+  if (title) title.textContent = `Hands Per Round · ${selectedPlayerCount} Players`;
+
   const note = document.getElementById('handModeNote');
-  if (note) note.textContent = descriptions[selectedHandCount];
+  if (note) {
+    note.textContent = selectedHandCount === rec ? `Recommended for ${selectedPlayerCount} players` : '';
+  }
 }
 
 function renderSetupRows() {
@@ -1741,16 +1872,17 @@ function renderDealer() {
    All values keep panels fully visible within viewport.
 ─────────────────────────────────────────────────────────────── */
 function getArcPositions(n) {
-  // Center points across viewport width — panels are ~110-160px fixed width.
+  // Center points across viewport width.
   // U-arc: edges high (low t%), center dips (high t%).
+  // All t values increased to push hands down into the open table space.
   const configs = {
-    1: [{c:50,  t:15}],
-    2: [{c:30,  t:10},{c:70,  t:10}],
-    3: [{c:15,  t:8}, {c:50,  t:28},{c:85,  t:8}],
-    4: [{c:12,  t:6}, {c:37,  t:22},{c:63,  t:22},{c:88,  t:6}],
-    5: [{c:9,   t:4}, {c:26,  t:18},{c:50,  t:32},{c:74,  t:18},{c:91,  t:4}],
-    6: [{c:8,   t:2}, {c:22,  t:14},{c:37,  t:26},{c:63,  t:26},{c:78,  t:14},{c:92,  t:2}],
-    7: [{c:7,   t:2}, {c:18,  t:12},{c:30,  t:22},{c:50,  t:30},{c:70,  t:22},{c:82,  t:12},{c:93,  t:2}],
+    1: [{c:50,  t:35}],
+    2: [{c:30,  t:30},{c:70,  t:30}],
+    3: [{c:15,  t:28},{c:50,  t:48},{c:85,  t:28}],
+    4: [{c:12,  t:26},{c:37,  t:42},{c:63,  t:42},{c:88,  t:26}],
+    5: [{c:9,   t:24},{c:26,  t:38},{c:50,  t:52},{c:74,  t:38},{c:91,  t:24}],
+    6: [{c:8,   t:22},{c:22,  t:34},{c:37,  t:46},{c:63,  t:46},{c:78,  t:34},{c:92,  t:22}],
+    7: [{c:7,   t:22},{c:18,  t:32},{c:30,  t:42},{c:50,  t:50},{c:70,  t:42},{c:82,  t:32},{c:93,  t:22}],
   };
   return configs[Math.min(n, 7)] || configs[7];
 }
